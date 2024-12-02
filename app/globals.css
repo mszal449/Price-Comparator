@@ -19,3 +19,18 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+
+/* NAVBAR */
+
+.navbar-element {
+  @apply font-light hover:text-gray-400 ease-in duration-150;
+}
+
+.navbar-element-hover {
+  @apply hover:text-gray-400 ease-in duration-150;
+}
+
+.navbar-active {
+  @apply font-semibold;
+}

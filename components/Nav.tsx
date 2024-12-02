@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import React, { useState } from "react";
+import React from "react";
 import { usePathname } from "next/navigation";
 
 const NavLinks = () => {
@@ -27,7 +27,7 @@ const NavLinks = () => {
 const Nav = () => {
   return (
     <nav className="flex justify-start overflow-hidden">
-      <div className="justify-end gap-4 md:flex">
+      <div className="flex justify-end gap-4 text-xl">
         <NavLinks />
       </div>
     </nav>

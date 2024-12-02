@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "../components/Navbar";
+import React from "react";
+import { Montserrat } from "next/font/google";
+
+const monsterrat = Montserrat();
 
 export const metadata: Metadata = {
   title: "InkCheck",
@@ -14,7 +18,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="h-full">
+      <body className={`${monsterrat.className} h-full`}>
         <Navbar />
         {children}
       </body>

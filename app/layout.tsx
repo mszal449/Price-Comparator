@@ -4,7 +4,9 @@ import Navbar from "../components/Navbar";
 import React from "react";
 import { Montserrat } from "next/font/google";
 
-const monsterrat = Montserrat();
+const monsterrat = Montserrat({
+  subsets: ["latin-ext"],
+});
 
 export const metadata: Metadata = {
   title: "InkCheck",

@@ -30,11 +30,10 @@ export default [
   {
     settings: {
       react: {
-        version: "detect", // Automatically detect the React version
+        version: "detect",
       },
     },
     rules: {
-      // Basic rules adapted from Google style
       curly: "error",
       eqeqeq: "error",
       "no-eval": "error",

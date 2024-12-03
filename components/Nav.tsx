@@ -10,13 +10,13 @@ const NavLinks = () => {
     <>
       <Link
         className={`navbar-element ${pathname === "/home" ? "navbar-active" : ""}`}
-        href="/home"
+        href="/"
       >
         Strona główna
       </Link>
       <Link
-        className={`navbar-element ${pathname === "/browse" ? "navbar-active" : ""}`}
-        href="/browse"
+        className={`navbar-element ${pathname === "/raport" ? "navbar-active" : ""}`}
+        href="/raport"
       >
         Przeglądaj ceny
       </Link>
@@ -27,7 +27,7 @@ const NavLinks = () => {
 const Nav = () => {
   return (
     <nav className="flex justify-start overflow-hidden">
-      <div className="flex justify-end gap-4 text-xl">
+      <div className="flex justify-end gap-4 text-lg">
         <NavLinks />
       </div>
     </nav>

@@ -29,3 +29,13 @@ body {
 .navbar-active {
   @apply font-semibold;
 }
+
+/* FILTERS */
+
+.filter-label {
+  @apply text-lg;
+}
+
+.filter-input {
+  @apply w-full rounded-sm border border-gray-500 bg-[#0a0a0a] p-1 active:border-gray-700;
+}

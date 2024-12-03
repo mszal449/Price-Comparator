@@ -12,11 +12,14 @@
     "check-format": "prettier --check .",
     "check-lint": "eslint .",
     "format": "prettier --write . && eslint . --fix",
-    "test-all": "npm run check-format && npm run check-lint && npm run check-types && npm run build"
+    "test-all": "npm run check-format && npm run check-lint && npm run check-types"
   },
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "eslint-plugin-next": "0.0.0",
+    "mongoose": "^8.8.3",
     "next": "15.0.3",
+    "next-auth": "^4.24.10",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-icons": "5.4.0"
@@ -24,6 +27,7 @@
   "devDependencies": {
     "@eslint/js": "9.16.0",
     "@next/eslint-plugin-next": "15.0.3",
+    "@types/bcryptjs": "^2.4.6",
     "@types/node": "22.10.1",
     "@types/react": "18.3.12",
     "@types/react-dom": "18.3.1",

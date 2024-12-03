@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import RaportPage from "../../components/raport/RaportPage";
 

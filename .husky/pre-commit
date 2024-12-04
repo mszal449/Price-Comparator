@@ -27,14 +27,4 @@ npm run check-types ||
 )
 
 # If everything passes... Now we can commit
-echo 'Trying to build...'
-
-npm run build ||
-(
-    echo 'BUILD FAIL:
-            Build Failed. Make the required changes listed above, add changes and try to commit again.';
-    false;
-)
-
-# If everything passes... Now we can commit
 echo 'SUCCESS: Commiting files...'

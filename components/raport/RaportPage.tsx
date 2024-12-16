@@ -1,62 +1,83 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import RaportFilters from "./RaportFilters";
-import RaportTable from "./RaportTable";
-
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-}
-
-interface Raport {
-  count: number;
-  products: Product[];
-}
+import React, { useState } from "react";
+import axios from "axios";
+import { IProductPrices } from "../../types";
+import ProductPreview from "./ProductPreview";
 
 const RaportPage = () => {
-  const [raport, setRaport] = useState<Raport | null>(null);
-  const [isLoading] = useState<boolean>(true);
-  const [filters, setFilters] = useState<{ [key: string]: string }>({});
+  const [product, setProduct] = useState<IProductPrices | null>(null);
+  const [productId, setProductId] = useState<string>("");
+  const [error, setError] = useState<string | null>("");
 
-  useEffect(() => {
-    setFilters({});
-    setRaport(getSampleRaport(filters));
-  }, []);
+  const updateProduct = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log(`Product ID: ${productId}`); // Added log
+    if (productId === "") {
+      setError("Musisz podać unikalny identyfikator produktu.");
+      return;
+    }
+    console.log(`Request URL: http://127.0.0.1:8000/price/${productId}`);
+    const response = await axios.get(
+      `http://127.0.0.1:8000/price/${productId}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        validateStatus: (status) =>
+          (status >= 200 && status < 300) || status === 404,
+      },
+    );
+    console.log(`Response status: ${response.status}`); // Added log
+    if (response.status === 404) {
+      setError("Nie znaleziono produktu.");
+      setProduct(null);
+      return;
+    }
+    if (response.status !== 200) {
+      setError("Błąd komunikacji z serwerem.");
+      setProduct(null);
+      return;
+    }
+
+    const data = response.data as IProductPrices;
+    console.log(data);
+    setProduct(data);
+    setError(null);
+  };
 
   return (
-    <div className="text-center">
-      {isLoading && <div>Ładowanie...</div>}
-      {raport && (
+    <div className="flex flex-col items-center">
+      <form
+        onSubmit={updateProduct}
+        className="flex flex-col items-center gap-2"
+      >
+        <span className="text-2xl">Wyszukaj produkt</span>
         <div>
-          <div className="text-2xl">Raport</div>
-          <div className="text-lg">Liczba produktów: {raport.count}</div>
+          <input
+            className={`rounded-l-md border border-gray-800 bg-black p-2 pr-0 text-xl text-white ${error ? "border-red-500" : ""}`}
+            type="text"
+            value={productId}
+            onChange={(e) => setProductId(e.target.value)}
+          />
+          <button className="m-2 ml-0 rounded-r-md border border-purple-500 bg-purple-500 p-2 text-xl duration-150 ease-in hover:bg-purple-600">
+            Szukaj
+          </button>
+        </div>
+        {error && <div className="text-red-500">{error}</div>}
+      </form>
+
+      {product && product.prices && (
+        <div className="w-[80%]">
+          <span className="mb-4 text-2xl">Wyniki:</span>
+          <ProductPreview {...product} />
         </div>
       )}
-      <div className="grid grid-cols-12 gap-4 p-4">
-        <div className="col-start-1 col-end-4">
-          <RaportFilters />
-        </div>
-        <div className="col-start-4 col-end-13">
-          <RaportTable />
-        </div>
-      </div>
+
+      {product && product.prices && product.prices.length === 0 && (
+        <div>Nie znaleziono cen dla danego produktu.</div>
+      )}
     </div>
   );
 };
 
 export default RaportPage;
-
-const getSampleRaport = (filters: { [key: string]: string }): Raport => {
-  console.log(filters);
-
-  return {
-    count: 4,
-    products: [
-      { id: 1, name: "Product 1", price: 10.99 },
-      { id: 2, name: "Product 2", price: 15.49 },
-      { id: 3, name: "Product 3", price: 20.0 },
-      { id: 4, name: "Product 4", price: 25.75 },
-    ],
-  };
-};

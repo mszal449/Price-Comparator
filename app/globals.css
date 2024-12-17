@@ -39,3 +39,7 @@ body {
 .filter-input {
   @apply w-full rounded-sm border border-gray-500 bg-[#0a0a0a] p-1 active:border-gray-700;
 }
+
+.filter-button {
+  @apply rounded-sm bg-purple-500 p-2 text-white duration-150 ease-in hover:bg-purple-600;
+}

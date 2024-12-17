@@ -3,6 +3,10 @@
     "allowJs": true,
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    },
     "declaration": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,

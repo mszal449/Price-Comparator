@@ -16,8 +16,10 @@
   },
   "dependencies": {
     "axios": "^1.7.9",
+    "@auth/mongodb-adapter": "^3.7.4",
     "bcryptjs": "^2.4.3",
     "eslint-plugin-next": "0.0.0",
+    "mongodb": "^6.12.0",
     "mongoose": "^8.8.3",
     "next": "15.0.3",
     "next-auth": "^4.24.10",

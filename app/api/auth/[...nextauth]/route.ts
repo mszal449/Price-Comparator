@@ -2,9 +2,11 @@ import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { connectToMongoDB } from "../../../../lib/mongodb";
-import User from "../../../../models/User";
+import User from "models/User";
+import clientPromise from "lib/mongoClient";
+import { MongoDBAdapter } from "@auth/mongodb-adapter";
 
-const authOptions: NextAuthOptions = {
+export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       name: "credentials",
@@ -16,42 +18,44 @@ const authOptions: NextAuthOptions = {
         if (!credentials) {
           return null;
         }
+
         const { email, password } = credentials as {
           email: string;
           password: string;
         };
 
         try {
+          // Connect to MongoDB
           await connectToMongoDB();
           const user = await User.findOne({ email });
 
           if (!user) {
-            return null;
+            return null; // User not found
           }
 
           const passwordsMatch = await bcrypt.compare(password, user.password);
-
           if (!passwordsMatch) {
-            return null;
+            return null; // Incorrect password
           }
 
-          return user;
+          return user; // Return user object (required by NextAuth)
         } catch (error) {
-          console.log("Error: ", error);
+          console.error("Authorization error:", error);
           return null;
         }
       },
     }),
   ],
+  adapter: MongoDBAdapter(clientPromise), // Use MongoDBAdapter for sessions
   session: {
-    strategy: "jwt",
+    strategy: "database", // Use database-backed sessions
+    maxAge: 30 * 24 * 60 * 60, // Sessions expire after 30 days
   },
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET, // Must match your secret
   pages: {
-    signIn: "/auth/login",
+    signIn: "/auth/login", // Custom login page
   },
 };
-
 const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };

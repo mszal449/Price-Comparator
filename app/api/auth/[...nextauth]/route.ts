@@ -3,8 +3,6 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { connectToMongoDB } from "../../../../lib/mongodb";
 import User from "models/User";
-import clientPromise from "lib/mongoClient";
-import { MongoDBAdapter } from "@auth/mongodb-adapter";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -46,16 +44,27 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
-  adapter: MongoDBAdapter(clientPromise), // Use MongoDBAdapter for sessions
   session: {
-    strategy: "database", // Use database-backed sessions
-    maxAge: 30 * 24 * 60 * 60, // Sessions expire after 30 days
+    strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60,
   },
   secret: process.env.NEXTAUTH_SECRET, // Must match your secret
   pages: {
     signIn: "/auth/login", // Custom login page
   },
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+      }
+      return token;
+    },
+    async session({ session }) {
+      return session;
+    },
+  },
 };
+
 const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };

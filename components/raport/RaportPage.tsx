@@ -1,48 +1,42 @@
 "use client";
 import React, { useState } from "react";
-import axios from "axios";
 import { IProductPrices } from "../../types";
 import ProductPreview from "./ProductPreview";
+import fetchProductPrices from "services/priceService";
 
 const RaportPage = () => {
   const [product, setProduct] = useState<IProductPrices | null>(null);
   const [productId, setProductId] = useState<string>("");
   const [error, setError] = useState<string | null>("");
-
   const updateProduct = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log(`Product ID: ${productId}`); // Added log
+    console.log(process.env.REACT_APP_API_ACCESS_KEY); // Added log
     if (productId === "") {
       setError("Musisz podać unikalny identyfikator produktu.");
       return;
     }
-    console.log(`Request URL: http://127.0.0.1:8000/price/${productId}`);
-    const response = await axios.get(
-      `http://127.0.0.1:8000/price/${productId}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        validateStatus: (status) =>
-          (status >= 200 && status < 300) || status === 404,
-      },
-    );
-    console.log(`Response status: ${response.status}`); // Added log
-    if (response.status === 404) {
-      setError("Nie znaleziono produktu.");
-      setProduct(null);
-      return;
-    }
-    if (response.status !== 200) {
-      setError("Błąd komunikacji z serwerem.");
-      setProduct(null);
-      return;
-    }
+    try {
+      const response = await fetchProductPrices(productId);
+      if (response.status === 404) {
+        setError("Nie znaleziono produktu.");
+        setProduct(null);
+        return;
+      }
+      if (response.status !== 200) {
+        setError("Błąd komunikacji z serwerem.");
+        setProduct(null);
+        return;
+      }
 
-    const data = response.data as IProductPrices;
-    console.log(data);
-    setProduct(data);
-    setError(null);
+      const data = response.data as IProductPrices;
+      console.log(data);
+      setProduct(data);
+      setError(null);
+    } catch {
+      setError("Musisz podać unikalny identyfikator produktu.");
+      return;
+    }
   };
 
   return (

@@ -3,14 +3,23 @@ import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
+import { useSession } from "next-auth/react";
+import { useEffect } from "react";
 
 const LoginForm = () => {
+  const { status } = useSession();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = React.useState<string>("");
   const [passwordError, setPasswordError] = React.useState<string>("");
-
   const router = useRouter();
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      router.replace("/raport");
+    }
+  }, [status, router]);
 
   const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

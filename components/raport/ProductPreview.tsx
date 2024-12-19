@@ -1,5 +1,5 @@
 import React from "react";
-import { IProductPrices } from "../../types";
+import { IProductPrices } from "types";
 
 const ProductPreview = (productPrices: IProductPrices) => {
   return (

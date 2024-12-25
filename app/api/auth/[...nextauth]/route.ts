@@ -1,8 +1,9 @@
-import NextAuth, { NextAuthOptions } from "next-auth";
+import NextAuth, { NextAuthOptions, Session } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { connectToMongoDB } from "../../../../lib/mongodb";
 import User from "models/User";
+import { JWT } from "next-auth/jwt";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -36,7 +37,11 @@ export const authOptions: NextAuthOptions = {
             return null; // Incorrect password
           }
 
-          return user; // Return user object (required by NextAuth)
+          return {
+            id: user._id.toString(),
+            email: user.email,
+            role: user.role,
+          };
         } catch (error) {
           console.error("Authorization error:", error);
           return null;
@@ -48,7 +53,7 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60,
   },
-  secret: process.env.NEXTAUTH_SECRET, // Must match your secret
+  secret: process.env.NEXTAUTH_SECRET,
   pages: {
     signIn: "/auth/login", // Custom login page
   },
@@ -56,15 +61,19 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
+        token.role = user.role; // Add role to token
       }
       return token;
     },
-    async session({ session }) {
+    async session({ session, token }: { session: Session; token: JWT }) {
+      if (token && session.user) {
+        session.user.id = token.id as string;
+        session.user.role = token.role as string;
+      }
       return session;
     },
   },
 };
 
 const handler = NextAuth(authOptions);
-
 export { handler as GET, handler as POST };

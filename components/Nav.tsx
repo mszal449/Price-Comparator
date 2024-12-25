@@ -9,7 +9,7 @@ const NavLinks = () => {
   return (
     <>
       <Link
-        className={`navbar-element ${pathname === "/home" ? "navbar-active" : ""}`}
+        className={`navbar-element ${pathname === "/" ? "navbar-active" : ""}`}
         href="/"
       >
         Strona główna

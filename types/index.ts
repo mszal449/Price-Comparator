@@ -13,3 +13,21 @@ export interface IProductPrices {
     stock: number;
   }[];
 }
+
+export interface IRaportFilters {
+  productId?: string;
+  minStock?: number;
+  minPrice?: number | null;
+  maxPrice?: number | null;
+}
+
+export interface ISearchOptions {
+  preciseName: boolean;
+  onlyAvailable: boolean;
+}
+
+export interface IUser {
+  id: number;
+  email: string;
+  role: string;
+}

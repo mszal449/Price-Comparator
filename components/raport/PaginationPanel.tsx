@@ -1,14 +1,17 @@
-import React from "react";
+"use client";
+import React, { useEffect } from "react";
 import { ISearchOptions } from "types";
 
 interface PaginationPanelProps {
   searchOptions: ISearchOptions;
   setSearchOptions: React.Dispatch<React.SetStateAction<ISearchOptions>>;
+  updateProduct: () => void;
 }
 
 const PaginationPanel: React.FC<PaginationPanelProps> = ({
   searchOptions,
   setSearchOptions,
+  updateProduct,
 }) => {
   const totalPages = Math.ceil(
     searchOptions.totalCount / searchOptions.pageSize,
@@ -26,19 +29,26 @@ const PaginationPanel: React.FC<PaginationPanelProps> = ({
     }
   };
 
+  useEffect(() => {
+    updateProduct();
+  }, [searchOptions.page]);
+
   return (
-    <div className="rouned-md flex items-center gap-2 border">
-      <button onClick={goToPreviousPage} disabled={searchOptions.page <= 1}>
-        Prev
+    <div className="flex items-center gap-4 rounded-md border border-gray-800 bg-black p-2 text-white">
+      <button
+        className="rounded-md border border-gray-600 px-3 py-1 hover:bg-gray-700"
+        onClick={goToPreviousPage}
+      >
+        Poprzednia strona
       </button>
       <span>
-        Page {searchOptions.page} of {totalPages || 1}
+        Strona {searchOptions.page} z {totalPages || 1}
       </span>
       <button
+        className="rounded-md border border-gray-600 px-3 py-1 hover:bg-gray-700"
         onClick={goToNextPage}
-        disabled={searchOptions.page >= totalPages}
       >
-        Next
+        Następna strona
       </button>
     </div>
   );

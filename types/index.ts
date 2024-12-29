@@ -14,7 +14,10 @@ export interface IProductPrices {
   }[];
 }
 
-export type IProductPricesArray = IProductPrices[];
+export interface IProductPricesResponse {
+  totalCount: number;
+  products: IProductPrices[];
+}
 
 export interface IRaportFilters {
   productId?: string;

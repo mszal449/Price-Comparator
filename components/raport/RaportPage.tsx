@@ -2,41 +2,47 @@
 import React, { useEffect, useState } from "react";
 import ProductPreview from "./ProductPreview";
 import fetchProductPrices from "services/priceService";
-import { IProductPricesArray, ISearchOptions } from "types";
+import { IProductPrices, IProductPricesResponse, ISearchOptions } from "types";
 import SearchOptionsPanel from "./SearchOptionsPanel";
 import PaginationPanel from "./PaginationPanel";
 
 const getInitialSearchOptions = (): ISearchOptions => {
-  if (typeof window !== "undefined") {
-    const storedOptions = localStorage.getItem("searchOptions");
-    return storedOptions
-      ? JSON.parse(storedOptions)
-      : { preciseName: true, onlyAvailable: false };
-  }
-  return {
+  const initialOptions = {
     preciseName: true,
     onlyAvailable: false,
     page: 1,
     pageSize: 10,
-  } as ISearchOptions;
+    totalCount: 1,
+  };
+
+  if (typeof window !== "undefined") {
+    const storedOptions = localStorage.getItem("searchOptions");
+    return storedOptions ? JSON.parse(storedOptions) : initialOptions;
+  }
+  return initialOptions as ISearchOptions;
 };
 
 const RaportPage = () => {
-  const [product, setProduct] = useState<IProductPricesArray | null>(null);
+  const [product, setProduct] = useState<IProductPrices[] | null>(null);
   const [productId, setProductId] = useState<string>("");
   const [error, setError] = useState<string | null>("");
-
+  const [mounted, setMounted] = useState(false);
   const [searchOptions, setSearchOptions] = useState<ISearchOptions>(
     getInitialSearchOptions,
   );
+  const [searchedProduct, setSearchedProduct] = useState<string>("");
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     localStorage.setItem("searchOptions", JSON.stringify(searchOptions));
+    console.log(searchOptions);
   }, [searchOptions]);
 
-  const updateProduct = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (productId === "" && searchOptions.preciseName) {
+  const updateProduct = async () => {
+    if (productId === "") {
       setError("Musisz podać unikalny identyfikator produktu.");
       return;
     }
@@ -53,20 +59,30 @@ const RaportPage = () => {
         return;
       }
 
-      const data = response.data as IProductPricesArray;
-      console.log(data);
-      setProduct(data);
+      const data = response.data as IProductPricesResponse;
+      setSearchOptions((prev) => ({ ...prev, totalCount: data.totalCount }));
+      setProduct(data.products);
+      setSearchedProduct(productId);
       setError(null);
-    } catch {
-      setError("Musisz podać unikalny identyfikator produktu.");
-      return;
+    } catch (error) {
+      console.error("Error fetching product prices", error);
     }
   };
+
+  useEffect(() => {
+    if (searchedProduct) {
+      updateProduct();
+    }
+  }, [searchOptions.page]);
 
   return (
     <div className="flex flex-col items-center">
       <form
-        onSubmit={updateProduct}
+        onSubmit={(e) => {
+          e.preventDefault();
+          setSearchOptions((prev) => ({ ...prev, page: 1 }));
+          updateProduct();
+        }}
         className="flex flex-col items-center gap-2"
       >
         <span className="text-2xl">Wyszukaj produkt</span>
@@ -87,25 +103,39 @@ const RaportPage = () => {
           setSearchOptions={setSearchOptions}
         />
       </form>
-      {product &&
-        product.map(
-          (p) =>
-            p.prices && (
-              <div key={p.product_id} className="w-[80%]">
-                <span className="mb-4 text-2xl">Wyniki:</span>
-                <ProductPreview {...p} />
-              </div>
-            ),
-        )}
+      {product && (
+        <div className="mt-5 flex flex-col items-center gap-2">
+          <span className="text-2xl">Wyniki dla {`"${searchedProduct}"`}:</span>
+          {mounted && !searchOptions.preciseName && (
+            <PaginationPanel
+              searchOptions={searchOptions}
+              setSearchOptions={setSearchOptions}
+              updateProduct={updateProduct}
+            />
+          )}
+          <div className="flex flex-col items-center gap-2">
+            {product.map(
+              (p) =>
+                p.prices && (
+                  <div key={p.product_id} className="w-[80%]">
+                    <ProductPreview {...p} />
+                  </div>
+                ),
+            )}
+          </div>
+          {mounted && !searchOptions.preciseName && (
+            <PaginationPanel
+              searchOptions={searchOptions}
+              setSearchOptions={setSearchOptions}
+              updateProduct={updateProduct}
+            />
+          )}
+        </div>
+      )}
 
       {product && product.length === 0 && (
         <div>Nie znaleziono cen dla danego produktu.</div>
       )}
-
-      <PaginationPanel
-        searchOptions={searchOptions}
-        setSearchOptions={setSearchOptions}
-      />
     </div>
   );
 };

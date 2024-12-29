@@ -20,6 +20,7 @@ const SearchOptionsPanel = ({
       ...prev,
       [name]: checked,
     }));
+    console.log(searchOptions);
   };
 
   return (

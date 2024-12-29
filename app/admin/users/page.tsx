@@ -75,16 +75,16 @@ const UsersAdminPage = () => {
           <table className="min-w-full border border-gray-800">
             <thead>
               <tr>
-                <th className="border border-gray-800 px-4 py-2 text-start">
+                <th className="border border-gray-800 px-2 py-1 text-start">
                   ID
                 </th>
-                <th className="border border-gray-800 px-4 py-2 text-start">
+                <th className="border border-gray-800 px-2 py-2 text-start">
                   Email
                 </th>
-                <th className="border border-gray-800 px-4 py-2 text-start">
+                <th className="border border-gray-800 px-2 py-2 text-start">
                   Rola
                 </th>
-                <th className="border border-gray-800 px-4 py-2 text-start">
+                <th className="border border-gray-800 px-2 py-2 text-start">
                   Akcje
                 </th>
               </tr>
@@ -92,16 +92,16 @@ const UsersAdminPage = () => {
             <tbody>
               {users.map((user) => (
                 <tr key={user.id}>
-                  <td className="border border-gray-800 px-4 py-2">
+                  <td className="border border-gray-800 px-2 py-2">
                     {user.id}
                   </td>
-                  <td className="border border-gray-800 px-4 py-2">
+                  <td className="border border-gray-800 px-2 py-2">
                     {user.email}
                   </td>
-                  <td className="border border-gray-800 px-4 py-2">
+                  <td className="border border-gray-800 px-2 py-2">
                     {user.role}
                   </td>
-                  <td className="border border-gray-800 px-4 py-2">
+                  <td className="border border-gray-800 px-2 py-2">
                     <button
                       onClick={() =>
                         handleRoleChange(

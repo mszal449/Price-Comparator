@@ -2,8 +2,9 @@
 import React, { useEffect, useState } from "react";
 import ProductPreview from "./ProductPreview";
 import fetchProductPrices from "services/priceService";
-import { IProductPrices, ISearchOptions } from "types";
+import { IProductPricesArray, ISearchOptions } from "types";
 import SearchOptionsPanel from "./SearchOptionsPanel";
+import PaginationPanel from "./PaginationPanel";
 
 const getInitialSearchOptions = (): ISearchOptions => {
   if (typeof window !== "undefined") {
@@ -12,11 +13,16 @@ const getInitialSearchOptions = (): ISearchOptions => {
       ? JSON.parse(storedOptions)
       : { preciseName: true, onlyAvailable: false };
   }
-  return { preciseName: true, onlyAvailable: false };
+  return {
+    preciseName: true,
+    onlyAvailable: false,
+    page: 1,
+    pageSize: 10,
+  } as ISearchOptions;
 };
 
 const RaportPage = () => {
-  const [product, setProduct] = useState<IProductPrices | null>(null);
+  const [product, setProduct] = useState<IProductPricesArray | null>(null);
   const [productId, setProductId] = useState<string>("");
   const [error, setError] = useState<string | null>("");
 
@@ -30,12 +36,12 @@ const RaportPage = () => {
 
   const updateProduct = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (productId === "") {
+    if (productId === "" && searchOptions.preciseName) {
       setError("Musisz podać unikalny identyfikator produktu.");
       return;
     }
     try {
-      const response = await fetchProductPrices(productId);
+      const response = await fetchProductPrices(productId, searchOptions);
       if (response.status === 404) {
         setError("Nie znaleziono produktu.");
         setProduct(null);
@@ -47,7 +53,7 @@ const RaportPage = () => {
         return;
       }
 
-      const data = response.data as IProductPrices;
+      const data = response.data as IProductPricesArray;
       console.log(data);
       setProduct(data);
       setError(null);
@@ -81,15 +87,25 @@ const RaportPage = () => {
           setSearchOptions={setSearchOptions}
         />
       </form>
-      {product && product.prices && (
-        <div className="w-[80%]">
-          <span className="mb-4 text-2xl">Wyniki:</span>
-          <ProductPreview {...product} />
-        </div>
-      )}
-      {product && product.prices && product.prices.length === 0 && (
+      {product &&
+        product.map(
+          (p) =>
+            p.prices && (
+              <div key={p.product_id} className="w-[80%]">
+                <span className="mb-4 text-2xl">Wyniki:</span>
+                <ProductPreview {...p} />
+              </div>
+            ),
+        )}
+
+      {product && product.length === 0 && (
         <div>Nie znaleziono cen dla danego produktu.</div>
       )}
+
+      <PaginationPanel
+        searchOptions={searchOptions}
+        setSearchOptions={setSearchOptions}
+      />
     </div>
   );
 };

@@ -14,6 +14,8 @@ export interface IProductPrices {
   }[];
 }
 
+export type IProductPricesArray = IProductPrices[];
+
 export interface IRaportFilters {
   productId?: string;
   minStock?: number;
@@ -24,6 +26,9 @@ export interface IRaportFilters {
 export interface ISearchOptions {
   preciseName: boolean;
   onlyAvailable: boolean;
+  page: number;
+  pageSize: number;
+  totalCount: number;
 }
 
 export interface IUser {

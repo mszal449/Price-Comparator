@@ -17,7 +17,20 @@ const getInitialSearchOptions = (): ISearchOptions => {
 
   if (typeof window !== "undefined") {
     const storedOptions = localStorage.getItem("searchOptions");
-    return storedOptions ? JSON.parse(storedOptions) : initialOptions;
+
+    if (storedOptions) {
+      const parsedOptions = JSON.parse(storedOptions);
+      const hasAllKeys = Object.keys(initialOptions).every(
+        (key) => key in parsedOptions,
+      );
+      if (hasAllKeys) {
+        return parsedOptions;
+      } else {
+        localStorage.setItem("searchOptions", JSON.stringify(initialOptions));
+        return initialOptions;
+      }
+    }
+    return initialOptions;
   }
   return initialOptions as ISearchOptions;
 };

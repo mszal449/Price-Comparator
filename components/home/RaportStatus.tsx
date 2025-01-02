@@ -28,14 +28,6 @@ const RaportStatus = () => {
     fetchReportStatus();
   }, []);
 
-  const callGenerateRaport = async () => {
-    try {
-      await fetch("http://127.0.0.1:8000/raport/generate");
-    } catch (error: any) {
-      console.log(error);
-    }
-  };
-
   return (
     <div>
       <div className="pb-6 text-2xl">
@@ -50,7 +42,7 @@ const RaportStatus = () => {
           </span>
         )}
       </div>
-      <div>
+      {!isLoading && (
         <Link
           href="/raport"
           className={`m-4 rounded-md p-4 text-white duration-150 ease-in ${
@@ -59,7 +51,7 @@ const RaportStatus = () => {
         >
           {raportStatus === "ready" ? "Przeglądaj" : "Przeglądaj nieaktualny"}
         </Link>
-      </div>
+      )}
     </div>
   );
 };

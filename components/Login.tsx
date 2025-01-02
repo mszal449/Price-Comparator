@@ -10,9 +10,6 @@ const Login = () => {
     <>
       {session ? (
         <div className="flex justify-end gap-4">
-          <Link href="/" className="navbar-element">
-            Konto
-          </Link>
           <button onClick={() => signOut()} className="navbar-element">
             Wyloguj
           </button>

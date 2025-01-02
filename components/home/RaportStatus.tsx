@@ -18,7 +18,7 @@ const RaportStatus = () => {
         } else {
           setRaportStatus("pending");
         }
-      } catch (error: any) {
+      } catch (error) {
         console.log(error);
       }
 

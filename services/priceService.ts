@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { ISearchOptions } from "types";
 
 const buildRequestUrl = (productId: string, searchOptions: ISearchOptions) => {
@@ -26,14 +26,15 @@ const fetchProductPrices = async (
     response = await axios.get(url, {
       headers: {
         "Content-Type": "application/json",
-        "api-key": "API_ACCESS_KEY",
+        "api-key": process.env.API_ACCESS_KEY,
       },
     });
-  } catch (error: any) {
-    if (error.response && error.response.status === 404) {
-      response = error.response;
+  } catch (error) {
+    const axiosError = error as AxiosError;
+    if (axiosError.response && axiosError.response.status === 404) {
+      return axiosError.response;
     } else {
-      throw error;
+      throw axiosError;
     }
   }
   return response;

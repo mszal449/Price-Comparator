@@ -5,7 +5,7 @@ import { connectToMongoDB } from "../../../../lib/mongodb";
 import User from "models/User";
 import { JWT } from "next-auth/jwt";
 
-export const authOptions: NextAuthOptions = {
+const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       name: "credentials",

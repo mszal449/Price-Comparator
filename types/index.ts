@@ -39,3 +39,8 @@ export interface IUser {
   email: string;
   role: string;
 }
+
+export interface FetchError extends Error {
+  status?: number;
+  response?: string;
+}

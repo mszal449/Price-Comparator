@@ -62,7 +62,7 @@ const SearchOptionsPanel = ({
                 Dokładne wyszukiwanie nazwy
               </label>
             </div>
-            <div className="flex items-baseline">
+            {/* <div className="flex items-baseline">
               <input
                 type="checkbox"
                 id="onlyAvailable"
@@ -77,7 +77,7 @@ const SearchOptionsPanel = ({
               >
                 Tylko dostępne
               </label>
-            </div>
+            </div> */}
           </div>
         </div>
       )}

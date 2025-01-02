@@ -49,7 +49,7 @@ const LoginForm = () => {
         return;
       }
 
-      router.replace("/raport");
+      router.push("/raport");
     } catch (error) {
       console.log(error);
     }

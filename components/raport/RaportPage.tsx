@@ -1,8 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import ProductPreview from "./ProductPreview";
-import fetchProductPrices from "services/priceService";
-import { IProductPrices, IProductPricesResponse, ISearchOptions } from "types";
+import { IProductPrices, ISearchOptions } from "types";
 import SearchOptionsPanel from "./SearchOptionsPanel";
 import PaginationPanel from "./PaginationPanel";
 
@@ -60,25 +59,33 @@ const RaportPage = () => {
       return;
     }
     try {
-      const response = await fetchProductPrices(productId, searchOptions);
-      if (response.status === 404) {
-        setError("Nie znaleziono produktu.");
-        setProduct(null);
+      const query = new URLSearchParams({
+        productId,
+        preciseName: searchOptions.preciseName ? "true" : "false",
+        onlyAvailable: searchOptions.onlyAvailable ? "true" : "false",
+        page: searchOptions.page.toString(),
+        pageSize: searchOptions.pageSize.toString(),
+      });
+      const res = await fetch(`/api/prices?${query.toString()}`, {
+        method: "GET",
+      });
+      if (res.status === 404) {
+        setError("Nie znaleziono produktu o podanym identyfikatorze.");
         return;
       }
-      if (response.status !== 200) {
+      if (!res.ok) {
         setError("Błąd komunikacji z serwerem.");
         setProduct(null);
         return;
       }
-
-      const data = response.data as IProductPricesResponse;
+      const data = await res.json();
       setSearchOptions((prev) => ({ ...prev, totalCount: data.totalCount }));
-      setProduct(data.products);
+      setProduct(data.products || null);
       setSearchedProduct(productId);
       setError(null);
     } catch (error) {
       console.error("Error fetching product prices", error);
+      setError("Musisz podać unikalny identyfikator produktu.");
     }
   };
 

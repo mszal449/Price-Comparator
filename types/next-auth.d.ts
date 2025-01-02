@@ -15,3 +15,5 @@ declare module "next-auth" {
     role: string;
   }
 }
+
+console.log(NextAuth);

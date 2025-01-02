@@ -15,16 +15,20 @@ export async function middleware(req: NextRequest) {
 
   if (startsWith(protectedRoutes) || startsWith(adminRoutes)) {
     // Retrieve the token
+
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
     if (!token) {
       // If no token, redirect to login
+      console.log("No token");
+
       const loginUrl = new URL("/auth/login", req.url);
       return NextResponse.redirect(loginUrl);
     }
 
     if (startsWith(adminRoutes) && token.role !== "admin") {
       // If accessing admin routes and not an admin, redirect to unauthorized
+      console.log(token.role);
       const unauthorizedUrl = new URL("/unauthorized", req.url);
       return NextResponse.redirect(unauthorizedUrl);
     }

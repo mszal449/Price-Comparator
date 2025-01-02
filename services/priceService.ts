@@ -2,7 +2,7 @@ import axios, { AxiosError } from "axios";
 import { ISearchOptions } from "types";
 
 const buildRequestUrl = (productId: string, searchOptions: ISearchOptions) => {
-  const url = `http://127.0.0.1:8000/price/${productId}`;
+  const url = `${process.env.API_URL}/prices/${productId}`;
   const params = new URLSearchParams();
   params.append("preciseName", searchOptions.preciseName ? "true" : "false");
   params.append(

@@ -41,8 +41,10 @@ const LoginForm = () => {
       const res = await signIn("credentials", {
         email,
         password,
-        redirect: false,
+        redirect: true,
       });
+
+      console.log("signIn response:", res); // Add this line
 
       if (res?.error) {
         setPasswordError("Niepoprawne dane logowania");

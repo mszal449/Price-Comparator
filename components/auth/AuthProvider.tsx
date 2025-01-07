@@ -5,7 +5,9 @@ import { ReactNode } from "react";
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
   return (
-    <SessionProvider refetchOnWindowFocus={false}>{children}</SessionProvider>
+    <SessionProvider refetchOnWindowFocus={false} session={undefined}>
+      {children}
+    </SessionProvider>
   );
 };
 

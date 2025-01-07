@@ -3,9 +3,8 @@ import { ISearchOptions } from "types";
 
 const buildRequestUrl = (productId: string, searchOptions: ISearchOptions) => {
   // console.log(`API URL: ${process.env.API_URL}`);
-  const api_url = "http://127.0.0.1:8000";
-  const url = `${api_url}/price/${productId}`;
-  console.log(`URL: ${url}`);
+  // const api_url = "http://127.0.0.1:8000";
+  const url = `$https://price-comparator-api.vercel.app//price/${productId}`;
 
   const params = new URLSearchParams();
   params.append("preciseName", searchOptions.preciseName ? "true" : "false");

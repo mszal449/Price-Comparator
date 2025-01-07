@@ -22,7 +22,9 @@ const RaportStatus = () => {
       setIsLoading(true);
       try {
         console.log("HERE");
-        const response = await fetch("http://127.0.0.1:8000/raport/status");
+        const response = await fetch(
+          `https://price-comparator-api.vercel.app/raport/status`,
+        );
         const data = await response.json();
         const raport = data as IRaport;
         console.log(raport);

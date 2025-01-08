@@ -1,7 +1,7 @@
 import React from "react";
 import RaportStatus from "./RaportStatus";
 
-const HomePage = () => {
+const HomePage = async () => {
   return (
     <div className="text-center">
       <div className="pb-4 text-4xl">

@@ -2,7 +2,7 @@
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
-interface IRaport {
+export interface IRaport {
   jarltech: boolean;
   jarltech_count: number;
   ingram_micro_24: boolean;
@@ -18,17 +18,12 @@ const RaportStatus = () => {
   const [raport_generated, setRaportGenerated] = useState<boolean>(false);
 
   useEffect(() => {
-    const fetchReportStatus = async () => {
+    const getReportStatus = async () => {
       setIsLoading(true);
       try {
-        console.log("HERE");
-        const response = await fetch(
-          `https://price-comparator-api.vercel.app/raport/status`,
-        );
-        const data = await response.json();
-        const raport = data as IRaport;
+        const response = await fetch("/api/raport/status");
+        const raport = await response.json();
         console.log(raport);
-        setRaport(raport);
 
         const today = new Date().toISOString().split("T")[0];
         const reportDate = new Date(raport.created_at)
@@ -36,6 +31,7 @@ const RaportStatus = () => {
           .split("T")[0];
         const isGeneratedToday = today === reportDate;
 
+        setRaport(raport);
         setRaportGenerated(
           isGeneratedToday &&
             (raport.jarltech || raport.ingram_micro_24 || raport.koncept_l),
@@ -47,7 +43,7 @@ const RaportStatus = () => {
       setIsLoading(false);
     };
 
-    fetchReportStatus();
+    getReportStatus();
   }, []);
 
   return (

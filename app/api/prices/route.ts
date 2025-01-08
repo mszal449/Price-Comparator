@@ -20,8 +20,6 @@ export async function GET(req: NextRequest) {
 
   try {
     const response = await fetchProductPrices(productId, searchOptions);
-
-    // Check if the response has a status and it's 404
     if (response.status === 404) {
       return NextResponse.json(response.data, { status: 404 });
     }

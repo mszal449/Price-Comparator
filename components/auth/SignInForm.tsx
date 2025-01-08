@@ -2,11 +2,21 @@
 import React, { useEffect } from "react";
 import { useActionState } from "react";
 import { requestSignIn } from "actions/request-sign-in";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 const initState = { error: "" };
 
 export const SignInForm = () => {
   const [fstate, action] = useActionState(requestSignIn, initState);
+  const { data: session, status } = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      router.push("/");
+    }
+  }, [session, status]);
 
   useEffect(() => {
     const { error } = fstate;

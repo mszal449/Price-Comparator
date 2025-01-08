@@ -3,6 +3,7 @@ import User from "models/User";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
+import { encode, decode } from "next-auth/jwt";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   session: {
@@ -41,6 +42,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
     }),
   ],
+  jwt: { encode, decode },
   callbacks: {
     jwt({ token, user }) {
       if (user) {

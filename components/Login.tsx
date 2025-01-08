@@ -1,18 +1,14 @@
 "use client";
-import { useSession } from "next-auth/react";
-import Link from "next/link";
 import React from "react";
-import { signOut } from "next-auth/react";
-import { useEffect } from "react";
+import { signOut, useSession } from "next-auth/react";
+import Link from "next/link";
 
 const Login = () => {
-  const { data: session, status } = useSession();
-
-  useEffect(() => {}, [status]);
+  const { status } = useSession();
 
   return (
     <>
-      {session ? (
+      {status === "authenticated" ? (
         <div className="flex justify-end gap-4">
           <button onClick={() => signOut()} className="navbar-element">
             Wyloguj

@@ -15,5 +15,5 @@ export async function requestSignIn(formState: FormState, formData: FormData) {
     return { error: err.message };
   }
 
-  redirect("http://localhost:3000/");
+  redirect("/raport");
 }

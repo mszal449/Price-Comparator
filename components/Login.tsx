@@ -3,9 +3,13 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import React from "react";
 import { signOut } from "next-auth/react";
+import { useEffect } from "react";
 
 const Login = () => {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+
+  useEffect(() => {}, [status]);
+
   return (
     <>
       {session ? (
@@ -29,3 +33,6 @@ const Login = () => {
 };
 
 export default Login;
+function UseEffect() {
+  throw new Error("Function not implemented.");
+}

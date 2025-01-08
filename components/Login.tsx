@@ -33,6 +33,3 @@ const Login = () => {
 };
 
 export default Login;
-function UseEffect() {
-  throw new Error("Function not implemented.");
-}

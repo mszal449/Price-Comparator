@@ -1,6 +1,6 @@
 import React from "react";
 
-const AdminPage = () => {
+const AdminPage = async () => {
   return (
     <div className="text-center">
       <div className="mb-5 text-2xl">Panel Administratora</div>

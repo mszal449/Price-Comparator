@@ -86,6 +86,7 @@ const RaportPage = () => {
       setSearchOptions((prev) => ({ ...prev, totalCount: data.totalCount }));
       setProduct(data.products || null);
       setSearchedProduct(productId);
+      console.log(data.products);
       setError(null);
     } catch (error) {
       console.error("Error fetching product prices", error);

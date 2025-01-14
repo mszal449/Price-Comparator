@@ -43,3 +43,29 @@ body {
 .filter-button {
   @apply rounded-sm bg-purple-500 p-2 text-white duration-150 ease-in hover:bg-purple-600;
 }
+
+/* LOGIN FORM */
+
+.login-form {
+  @apply mx-auto mt-8 max-w-md rounded-lg p-6 shadow-md;
+}
+
+.login-label {
+  @apply block text-sm font-medium text-gray-200;
+}
+
+.login-input {
+  @apply mt-1 block w-full rounded-md border border-gray-700 bg-gray-800 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm;
+}
+
+.login-button {
+  @apply w-full rounded-md border border-transparent px-4 py-2 text-sm font-medium text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2;
+}
+
+.login-button-login {
+  @apply bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500;
+}
+
+.login-button-signup {
+  @apply bg-green-600 hover:bg-green-700 focus:ring-green-500;
+}

@@ -3,7 +3,7 @@ import "./globals.css";
 import Navbar from "../components/Navbar";
 import React from "react";
 import { Montserrat } from "next/font/google";
-import AuthProvider from "../components/auth/AuthProvider";
+import { Toaster } from "react-hot-toast";
 
 const monsterrat = Montserrat({
   subsets: ["latin-ext"],
@@ -21,12 +21,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <AuthProvider>
-        <body className={`${monsterrat.className} h-full`}>
-          <Navbar />
-          {children}
-        </body>
-      </AuthProvider>
+      <body className={`${monsterrat.className} h-full`}>
+        <Toaster />
+        <Navbar />
+        {children}
+      </body>
     </html>
   );
 }

@@ -14,7 +14,6 @@ const UsersAdminPage = () => {
       }
       const fetchedUsers = await response.json();
       setUsers(fetchedUsers);
-      console.log(fetchedUsers);
     } catch (error) {
       console.error("Nie udało się pobrać użytkowników:", error);
       setErrorMessage(true);

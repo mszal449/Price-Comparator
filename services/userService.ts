@@ -5,7 +5,6 @@ import User from "../models/User";
 export const getUsers = async (): Promise<IUser[]> => {
   try {
     await connectToMongoDB();
-    console.log("Getting users");
     const users = await User.find().exec();
     const userResponse: IUser[] = users.map((user) => ({
       id: user._id,

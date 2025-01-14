@@ -26,7 +26,6 @@ const RaportFilters = ({ filters, setFilters }: IRaportFiltersProps) => {
       ...prevFilters,
       [name]: parsedValue,
     }));
-    console.log(filters);
   };
 
   const updateFilters = () => {

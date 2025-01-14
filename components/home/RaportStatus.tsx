@@ -23,8 +23,6 @@ const RaportStatus = () => {
       try {
         const response = await fetch("/api/raport/status");
         const raport = await response.json();
-        console.log(raport);
-
         const today = new Date().toISOString().split("T")[0];
         const reportDate = new Date(raport.created_at)
           .toISOString()

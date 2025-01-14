@@ -63,30 +63,32 @@ const RaportPage = () => {
       setIsLoading(true);
       setProduct(null);
       const query = new URLSearchParams({
-        productId,
         preciseName: searchOptions.preciseName ? "true" : "false",
         onlyAvailable: searchOptions.onlyAvailable ? "true" : "false",
         page: searchOptions.page.toString(),
         pageSize: searchOptions.pageSize.toString(),
       });
-      const res = await fetch(`/api/prices?${query.toString()}`, {
+      const url = `/api/products/${productId}?${query.toString()}`;
+      const res = await fetch(url, {
         method: "GET",
       });
+
       if (res.status === 404) {
         setError("Nie znaleziono produktu o podanym identyfikatorze.");
         setProduct(null);
         return;
       }
+
       if (!res.ok) {
         setError("Błąd komunikacji z serwerem.");
         setProduct(null);
         return;
       }
+
       const data = await res.json();
       setSearchOptions((prev) => ({ ...prev, totalCount: data.totalCount }));
       setProduct(data.products || null);
       setSearchedProduct(productId);
-      console.log(data.products);
       setError(null);
     } catch (error) {
       console.error("Error fetching product prices", error);

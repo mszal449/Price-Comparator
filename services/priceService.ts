@@ -3,7 +3,6 @@ import { ISearchOptions } from "types";
 
 const buildRequestUrl = (productId: string, searchOptions: ISearchOptions) => {
   const url = `${process.env.API_URL}/price/${productId}`;
-  console.log(url);
 
   const params = new URLSearchParams();
   params.append("preciseName", searchOptions.preciseName ? "true" : "false");

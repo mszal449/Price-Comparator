@@ -18,7 +18,6 @@ export async function middleware(request: NextRequest) {
 
   if (isProtectedRoute || isAuthRoute || isAdminRoute) {
     const user = await getUser(supabaseResponse, request);
-    console.log(user);
     if (isProtectedRoute && !user) {
       return NextResponse.redirect(new URL("/auth/login", request.url));
     }

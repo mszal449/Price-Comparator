@@ -1,16 +1,7 @@
 "use client";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-
-export interface IRaport {
-  jarltech: boolean;
-  jarltech_count: number;
-  ingram_micro_24: boolean;
-  ingram_micro_24_count: number;
-  koncept_l: boolean;
-  koncept_l_count: number;
-  created_at: string;
-}
+import { IRaport } from "types";
 
 const RaportStatus = () => {
   const [raport, setRaport] = useState<IRaport | null>();
@@ -22,18 +13,23 @@ const RaportStatus = () => {
       setIsLoading(true);
       try {
         const response = await fetch("/api/raport/status");
-        const raport = await response.json();
+        const raport = (await response.json()).raport as IRaport;
+
+        if (!raport) {
+          setRaport(null);
+          setRaportGenerated(false);
+          return;
+        }
+
         const today = new Date().toISOString().split("T")[0];
         const reportDate = new Date(raport.created_at)
           .toISOString()
           .split("T")[0];
-        const isGeneratedToday = today === reportDate;
+
+        const isGeneratedToday = reportDate ? today === reportDate : false;
 
         setRaport(raport);
-        setRaportGenerated(
-          isGeneratedToday &&
-            (raport.jarltech || raport.ingram_micro_24 || raport.koncept_l),
-        );
+        setRaportGenerated(isGeneratedToday);
       } catch (error) {
         console.log(error);
       }
@@ -47,31 +43,31 @@ const RaportStatus = () => {
   return (
     <div>
       <div className="pb-6 text-2xl">
-        Status raportu:
         {isLoading ? (
           <span>Ładowanie...</span>
         ) : raport ? (
           <div>
-            {raport.jarltech && (
-              <div className="text-green-500">
-                Jarltech: {raport.jarltech_count} cen
-              </div>
-            )}
-            {raport.ingram_micro_24 && (
-              <div className="text-green-500">
-                Ingram Micro 24: {raport.ingram_micro_24_count} cen
-              </div>
-            )}
-            {raport.koncept_l && (
-              <div className="text-green-500">
-                Koncept L: {raport.koncept_l_count} cen
-              </div>
-            )}
-            {!raport.jarltech &&
-              !raport.ingram_micro_24 &&
-              !raport.koncept_l && (
-                <div className="red-500">Nie wygenerowano raportu</div>
-              )}
+            <div>
+              Raport wygenerowano:{" "}
+              {new Date(raport.created_at).toLocaleDateString()}
+            </div>
+            <div
+              className={raport.jarltech ? "text-green-500" : "text-red-500"}
+            >
+              Jarltech: {raport.jarltech_count} cen
+            </div>
+            <div
+              className={
+                raport.ingram_micro_24 ? "text-green-500" : "text-red-500"
+              }
+            >
+              Ingram Micro 24: {raport.ingram_micro_24_count} cen
+            </div>
+            <div
+              className={raport.koncept_l ? "text-green-500" : "text-red-500"}
+            >
+              Koncept L: {raport.koncept_l_count} cen
+            </div>
           </div>
         ) : (
           <div>Nie wygenerowano raportu</div>

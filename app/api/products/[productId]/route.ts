@@ -1,31 +1,36 @@
-import { NextRequest, NextResponse } from "next/server";
-import { Product } from "models/Product";
-import { connectToMongoDB } from "lib";
-import { IPrice } from "models/price";
+import { NextResponse } from "next/server";
+import { Product } from "models";
+import { IPrice } from "models/Price";
+import { connectDB } from "lib";
+import { IProduct } from "models/Product";
 
 function normalizeProductId(productId: string): string {
   return productId.replace(/\s+/g, "").trim().toUpperCase();
 }
 
 export async function GET(
-  request: NextRequest,
-  context: { params: { productId: string } },
+  request: Request,
+  { params }: { params: Promise<{ productId: string }> },
 ) {
-  await connectToMongoDB();
-  console.log("here");
+  await connectDB();
   const { searchParams } = new URL(request.url);
-  const { productId } = await context.params;
   const preciseName = searchParams.get("preciseName") !== "false";
   const pageSize = parseInt(searchParams.get("pageSize") || "10", 10);
   const page = parseInt(searchParams.get("page") || "1", 10);
-  // const offset = (page - 1) * pageSize;
+  const offset = (page - 1) * pageSize;
+
+  const productId = (await params).productId;
   const normalizedId = normalizeProductId(productId);
 
   if (preciseName) {
-    const product = await Product.findOne({ id: "JP-70CT001-00" });
+    const product = await Product.findOne({ id: normalizedId });
     if (!product) {
-      return NextResponse.json({ error: "Product not found" }, { status: 404 });
+      return NextResponse.json({ error: "Prices not found" }, { status: 404 });
     }
+    if (product.prices.length < 1) {
+      return NextResponse.json({ error: "Prices not found" }, { status: 404 });
+    }
+
     return NextResponse.json({
       products: [
         {
@@ -45,17 +50,31 @@ export async function GET(
       totalCount: 1,
     });
   } else {
-    const query = { id: normalizedId };
-    const products = await Product.find(query)
-      .skip((page - 1) * pageSize)
-      .limit(pageSize);
+    const productsResponse = await Product.aggregate([
+      {
+        $match: {
+          id: { $regex: normalizedId, $options: "i" },
+          "prices.0": { $exists: true },
+        },
+      },
+      {
+        $sort: { created_at: 1 },
+      },
+      {
+        $facet: {
+          metadata: [{ $count: "totalCount" }],
+          data: [{ $skip: offset }, { $limit: pageSize }],
+        },
+      },
+    ]);
+    const totalCount = productsResponse[0]?.metadata[0]?.totalCount || 0;
+    const products = productsResponse[0]?.data || [];
 
     if (!products.length) {
-      return NextResponse.json({ error: "No products found" }, { status: 404 });
+      return NextResponse.json({ error: "No prices found" }, { status: 404 });
     }
 
-    const totalCount = await Product.countDocuments(query);
-    const result = products.map((product) => ({
+    const result = products.map((product: IProduct) => ({
       product_id: product.id,
       product_name: product.name,
       prices: product.prices.map((p: IPrice) => ({

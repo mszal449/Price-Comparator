@@ -8,7 +8,7 @@ interface IRaportFiltersProps {
   setFilters: (filters: IRaportFilters) => void;
 }
 
-const RaportFilters = ({ filters, setFilters }: IRaportFiltersProps) => {
+const RaportFilters = ({ setFilters }: IRaportFiltersProps) => {
   const [localFilters, setLocalFilters] = useState<IRaportFilters>({
     productId: "",
     minStock: 0,

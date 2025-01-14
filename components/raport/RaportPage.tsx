@@ -54,6 +54,10 @@ const RaportPage = () => {
     localStorage.setItem("searchOptions", JSON.stringify(searchOptions));
   }, [searchOptions]);
 
+  useEffect(() => {
+    updateProduct();
+  }, [searchOptions.page]);
+
   const updateProduct = async () => {
     if (!productId) {
       setError("Musisz podać unikalny identyfikator produktu.");
@@ -74,7 +78,7 @@ const RaportPage = () => {
       });
 
       if (res.status === 404) {
-        setError("Nie znaleziono produktu o podanym identyfikatorze.");
+        setError("Nie znaleziono cen produktu o podanym identyfikatorze.");
         setProduct(null);
         return;
       }

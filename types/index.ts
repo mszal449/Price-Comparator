@@ -44,3 +44,13 @@ export interface FetchError extends Error {
   status?: number;
   response?: string;
 }
+
+export interface IRaport {
+  jarltech: boolean;
+  jarltech_count: number;
+  ingram_micro_24: boolean;
+  ingram_micro_24_count: number;
+  koncept_l: boolean;
+  koncept_l_count: number;
+  created_at: string;
+}

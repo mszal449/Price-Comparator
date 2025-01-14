@@ -1,4 +1,4 @@
-import { connectToMongoDB } from "./mongodb";
+import connectDB from "./mongodb";
 import { getErrorMessage } from "./utils";
 
-export { connectToMongoDB, getErrorMessage };
+export { connectDB, getErrorMessage };

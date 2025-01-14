@@ -1,6 +1,6 @@
-import { PriceModel } from "./price";
-import { Product } from "./Product";
-import { ShopModel } from "./Raport";
-import { RaportModel } from "./Shop";
+import PriceModel from "./Price";
+import Product from "./Product";
+import Shop from "./Shop";
+import Raport from "./Raport";
 
-export { PriceModel, Product, ShopModel, RaportModel };
+export { PriceModel, Product, Shop, Raport };

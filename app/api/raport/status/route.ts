@@ -1,15 +1,13 @@
+import { connectDB } from "lib";
+import { Raport } from "models";
 import { NextResponse } from "next/server";
-import { fetchReportStatus } from "../../../../services/raportService";
 
 export async function GET() {
-  try {
-    const raport = await fetchReportStatus();
-    return NextResponse.json(raport);
-  } catch (error) {
-    console.error("Error fetching report status", error);
-    return NextResponse.json(
-      { error: "Error fetching report status" },
-      { status: 500 },
-    );
+  await connectDB();
+  const raport = await Raport.find().sort({ created_at: -1 }).limit(1);
+  if (raport[0]) {
+    return NextResponse.json({ raport: raport[0] });
+  } else {
+    return NextResponse.json(null);
   }
 }

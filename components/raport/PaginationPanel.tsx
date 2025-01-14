@@ -11,24 +11,17 @@ interface PaginationPanelProps {
 const PaginationPanel: React.FC<PaginationPanelProps> = ({
   searchOptions,
   setSearchOptions,
-  updateProduct,
 }) => {
   const totalPages = Math.ceil(
     searchOptions.totalCount / searchOptions.pageSize,
   );
 
   const goToPreviousPage = () => {
-    if (searchOptions.page > 1) {
-      setSearchOptions((prev) => ({ ...prev, page: prev.page - 1 }));
-      updateProduct();
-    }
+    setSearchOptions((prev) => ({ ...prev, page: prev.page - 1 }));
   };
 
   const goToNextPage = () => {
-    if (searchOptions.page < totalPages) {
-      setSearchOptions((prev) => ({ ...prev, page: prev.page + 1 }));
-      updateProduct();
-    }
+    setSearchOptions((prev) => ({ ...prev, page: prev.page + 1 }));
   };
 
   return (

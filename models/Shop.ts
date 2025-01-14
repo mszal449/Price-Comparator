@@ -1,14 +1,22 @@
-import mongoose from "mongoose";
+import mongoose, { Schema, Document, Model } from "mongoose";
 
-const RaportSchema = new mongoose.Schema({
-  jarltech: { type: Boolean, default: false },
-  jarltech_count: { type: Number, default: 0 },
-  ingram_micro_24: { type: Boolean, default: false },
-  ingram_micro_24_count: { type: Number, default: 0 },
-  koncept_l: { type: Boolean, default: false },
-  koncept_l_count: { type: Number, default: 0 },
-  created_at: { type: Date, default: Date.now },
-});
+export interface IShop extends Document {
+  id: string;
+  name: string;
+  url: string;
+  created_at: Date;
+}
 
-export const RaportModel =
-  mongoose.models.Raport || mongoose.model("Raport", RaportSchema, "raports");
+const ShopSchema: Schema<IShop> = new Schema(
+  {
+    id: { type: String, required: true },
+    name: { type: String, required: true },
+    url: { type: String, required: true },
+    created_at: { type: Date, default: Date.now },
+  },
+  { collection: "shops" },
+);
+
+export const Shop: Model<IShop> =
+  mongoose.models?.Shop || mongoose.model<IShop>("Shop", ShopSchema);
+export default Shop;

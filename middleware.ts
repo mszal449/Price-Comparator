@@ -10,7 +10,7 @@ export async function middleware(request: NextRequest) {
 
   const protected_routes = ["/admin", "/raport"];
   const auth_routes = ["/auth/login", "/auth/create-account"];
-  const admin_routes = ["/admin"];
+  const admin_routes = ["/admin", "/admin/users"];
 
   const isProtectedRoute = protected_routes.includes(path);
   const isAuthRoute = auth_routes.includes(path);

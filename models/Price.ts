@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
+import mongoose, { Schema, Document, Model } from "mongoose";
 
-export interface IPrice {
+export interface IPrice extends Document {
   shop_id: string;
   shop_name: string;
   product_id: string;
@@ -11,7 +11,7 @@ export interface IPrice {
   updated_at?: Date;
 }
 
-export const PriceSchema = new mongoose.Schema(
+export const PriceSchema: Schema<IPrice> = new Schema(
   {
     shop_id: { type: String, required: true },
     shop_name: { type: String, required: true },
@@ -25,5 +25,6 @@ export const PriceSchema = new mongoose.Schema(
   { collection: "price" },
 );
 
-export const PriceModel =
-  mongoose.models?.Price || mongoose.model("Price", PriceSchema);
+export const Price: Model<IPrice> =
+  mongoose.models?.Price || mongoose.model<IPrice>("Price", PriceSchema);
+export default Price;

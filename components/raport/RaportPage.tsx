@@ -8,7 +8,7 @@ import Spinner from "../utils/Spinner";
 
 const getInitialSearchOptions = (): ISearchOptions => {
   const initialOptions = {
-    preciseName: true,
+    preciseName: false,
     onlyAvailable: false,
     page: 1,
     pageSize: 10,

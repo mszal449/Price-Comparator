@@ -58,7 +58,7 @@ const SearchOptionsPanel = ({
                 className="cursor-pointer"
               />
               <label className="ml-1 select-none" htmlFor="preciseName">
-                Dokładne wyszukiwanie nazwy
+                Dokładne wyszukiwanie identyfikatora
               </label>
             </div>
             {/* <div className="flex items-baseline">

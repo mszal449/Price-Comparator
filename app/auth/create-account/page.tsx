@@ -53,6 +53,19 @@ export default function RegisterPage() {
           disabled={isPending}
         />
       </div>
+      <div className="mb-6">
+        <label htmlFor="registration_key" className="login-label">
+          Klucz Rejestracji
+        </label>
+        <input
+          id="registration_key"
+          name="registration_key"
+          type="password"
+          required
+          className="login-input"
+          disabled={isPending}
+        />
+      </div>
       <button
         formAction={handleClickCreateAccount}
         className="login-button login-button-signup flex justify-center"
@@ -61,7 +74,7 @@ export default function RegisterPage() {
         {isPending ? (
           <Loader2 className="animate-spin text-center" />
         ) : (
-          "Utwórz konto"
+          "Utwórz Konto"
         )}
       </button>
     </form>

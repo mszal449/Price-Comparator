@@ -4,7 +4,6 @@
 2. https://github.com/orgs/supabase/discussions/21573
 3. Discount column
 
-
 ## Getting Started
 
 First, run the development server:

@@ -4,36 +4,37 @@ import { createContext } from "react";
 import { createClient } from "utils/supabase/server";
 
 interface IAuthContext {
-    user: User | null;
-    loading: boolean;
-  }
+  user: User | null;
+  loading: boolean;
+}
 
 const AuthContext = createContext<IAuthContext>({
-    user: null,
-    loading: true
-})
+  user: null,
+  loading: true,
+});
 export const AuthProvider = ({
-    children,
-    initialUser
+  children,
+  initialUser,
 }: {
-    children: ReactNode,
-    initialUser: User | null
+  children: ReactNode;
+  initialUser: User | null;
 }) => {
-    const [user, setUser] = useState<User | null>(initialUser);
-    const [loading, setLoading] = useState<boolean>(true);
-    const {auth} = createClient();
+  const [user, setUser] = useState<User | null>(initialUser);
+  const [loading, setLoading] = useState<boolean>(true);
+  const { auth } = createClient();
 
-    useEffect(() => {
-        const { data: { subscription } } = auth.onAuthStateChange((_, session) => {
-          setUser(session?.user || null);
-          setLoading(false);
-        });
-    
-        setLoading(false);
-    
-        return () => {
-          subscription.unsubscribe();
-        };
-      }, [auth]);
-    
-}
+  useEffect(() => {
+    const {
+      data: { subscription },
+    } = auth.onAuthStateChange((_, session) => {
+      setUser(session?.user || null);
+      setLoading(false);
+    });
+
+    setLoading(false);
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [auth]);
+};

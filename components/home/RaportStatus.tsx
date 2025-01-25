@@ -83,6 +83,10 @@ const RaportStatus = () => {
           {raport_generated ? "Przeglądaj" : "Przeglądaj nieaktualny"}
         </Link>
       )}
+      <div className="pt-10 text-base">
+        Uwaga! Jeżeli nazwa sklepu jest czerwona, ceny mogą być nieaktualne.
+      </div>
+      <div className="text-base">Zwróć uwagę na datę dodania ceny.</div>
     </div>
   );
 };

@@ -1,17 +1,20 @@
+"use client";
 import React from "react";
 import { IProductPrices } from "types";
 
-const ProductPreview = (productPrices: IProductPrices) => {
+const ProductPreview = ({ product_id, prices }: IProductPrices) => {
+
   return (
     <div className="flex w-full flex-col gap-2 border border-gray-700 p-4">
-      <div className="text-2xl">{productPrices.product_id}</div>
+      <div className="text-2xl">{product_id}</div>
       <div className="text-gray-400">
-        {productPrices.product_name
-          ? productPrices.product_name
-          : "Opis produktu nie jest dostępny."}
+        {prices &&
+          prices.map((price) => {
+            return <div key={price.shop_id}>{price.shop_description}</div>;
+          })}
       </div>
       <div>
-        {productPrices.prices && (
+        {prices && (
           <table className="min-w-full divide-y divide-gray-700">
             <thead className="bg-gray-800">
               <tr>
@@ -48,7 +51,7 @@ const ProductPreview = (productPrices: IProductPrices) => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-700 bg-gray-900">
-              {productPrices.prices
+              {prices
                 .sort((a, b) => a.price_in_pln - b.price_in_pln)
                 .map((price, index) => (
                   <tr key={index}>

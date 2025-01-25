@@ -23,7 +23,6 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${monsterrat.className} h-full`}>
         <Toaster />
-        <Navbar />
         {children}
       </body>
     </html>

@@ -5,6 +5,7 @@ export interface IProductPrices {
     id: number;
     shop_id: number;
     shop_name: string;
+    shop_description: string;
     currency: string;
     updated_at: string;
     product_id: string;

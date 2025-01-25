@@ -1,7 +1,7 @@
 "use server";
 
 import { getErrorMessage } from "lib/utils";
-import { createSupabaseClient } from "utils/supabase/server";
+import { createClient } from "utils/supabase/server";
 
 export async function createAccountAction(formData: FormData) {
   try {
@@ -16,7 +16,7 @@ export async function createAccountAction(formData: FormData) {
       }
     }
 
-    const { auth } = await createSupabaseClient();
+    const { auth } = await createClient();
 
     const { error } = await auth.signUp({
       email,
@@ -40,7 +40,7 @@ export async function loginAction(formData: FormData) {
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
 
-    const { auth } = await createSupabaseClient();
+    const { auth } = await createClient();
 
     const { error } = await auth.signInWithPassword({ email, password });
     if (error) {
@@ -55,7 +55,7 @@ export async function loginAction(formData: FormData) {
 
 export async function signOutAction() {
   try {
-    const { auth } = await createSupabaseClient();
+    const { auth } = await createClient();
 
     const { error } = await auth.signOut();
     if (error) {

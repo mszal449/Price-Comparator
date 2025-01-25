@@ -102,14 +102,16 @@ const RaportPage = () => {
     }
   };
 
+  const handle_submit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setSearchOptions((prev) => ({ ...prev, page: 1 }));
+    updateProduct();
+  };
+
   return (
     <div className="flex flex-col items-center">
       <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          setSearchOptions((prev) => ({ ...prev, page: 1 }));
-          updateProduct();
-        }}
+        onSubmit={handle_submit}
         className="flex flex-col items-center gap-2"
       >
         <span className="text-2xl">Wyszukaj produkt</span>

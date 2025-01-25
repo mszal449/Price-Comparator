@@ -1,9 +1,9 @@
 # todo:
 
-1. Fix data fetching not returning data
+1. Description Search
 2. https://github.com/orgs/supabase/discussions/21573
+3. Discount column
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
 

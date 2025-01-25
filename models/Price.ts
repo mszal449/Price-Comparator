@@ -3,6 +3,7 @@ import mongoose, { Schema, Document, Model } from "mongoose";
 export interface IPrice extends Document {
   shop_id: string;
   shop_name: string;
+  shop_description: string;
   product_id: string;
   price: number;
   stock: number;
@@ -15,6 +16,7 @@ export const PriceSchema: Schema<IPrice> = new Schema(
   {
     shop_id: { type: String, required: true },
     shop_name: { type: String, required: true },
+    shop_description: { type: String, required: true },
     product_id: { type: String, required: true },
     price: { type: Number, required: true },
     stock: { type: Number, required: true },

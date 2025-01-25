@@ -44,6 +44,7 @@ export async function GET(
             updated_at: p.updated_at,
             shop_name: p.shop_name,
             shop_id: p.shop_id,
+            shop_description: p.shop_description,
           })),
         },
       ],
@@ -85,6 +86,7 @@ export async function GET(
         updated_at: p.updated_at,
         shop_name: p.shop_name,
         shop_id: p.shop_id,
+        shop_description: p.shop_description,
       })),
     }));
     return NextResponse.json({

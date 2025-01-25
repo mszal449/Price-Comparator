@@ -1,18 +1,21 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Logo from "./Logo";
 import { User } from "@supabase/supabase-js";
 import { createClient } from "utils/supabase/client";
 import Link from "next/link";
 import SignOutButton from "./SignOutButton";
 
-const Navbar = () => {
-  const [user, setUser] = useState<User | null>(null);
-  const { auth } = createClient();
+interface NavbarProps {
+  initialUser: User | null;
+}
 
-  auth.onAuthStateChange((_, session) => {
-    setUser(session?.user || null);
-  });
+const Navbar = ({ initialUser } : NavbarProps) => {
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    setUser(initialUser);
+  })
 
   return (
     <div className="nav border-gray top-0 z-[20] mx-auto flex w-full items-center justify-between p-4">

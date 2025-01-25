@@ -3,6 +3,7 @@ import React from "react";
 import { IProductPrices } from "types";
 
 const ProductPreview = ({ product_id, prices }: IProductPrices) => {
+
   return (
     <div className="flex w-full flex-col gap-2 border border-gray-700 p-4">
       <div className="text-2xl">{product_id}</div>

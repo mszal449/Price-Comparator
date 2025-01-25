@@ -10,12 +10,12 @@ interface NavbarProps {
   initialUser: User | null;
 }
 
-const Navbar = ({ initialUser }: NavbarProps) => {
+const Navbar = ({ initialUser } : NavbarProps) => {
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     setUser(initialUser);
-  });
+  })
 
   return (
     <div className="nav border-gray top-0 z-[20] mx-auto flex w-full items-center justify-between p-4">

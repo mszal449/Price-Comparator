@@ -2,11 +2,7 @@
 import React from "react";
 import { IProductPrices } from "types";
 
-interface ProductPreviewProps extends IProductPrices {
-  today: string;
-}
-
-const ProductPreview = ({ product_id, prices, today}: ProductPreviewProps) => {
+const ProductPreview = ({ product_id, prices }: IProductPrices) => {
   return (
     <div className="flex w-full flex-col gap-2 border border-gray-700 p-4">
       <div className="text-2xl">{product_id}</div>
@@ -71,16 +67,7 @@ const ProductPreview = ({ product_id, prices, today}: ProductPreviewProps) => {
                       {price.stock}
                     </td>
                     <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-300">
-                        <span
-                        className={
-                          new Date(price.updated_at).toLocaleDateString() !==
-                          new Date(today).toLocaleDateString()
-                          ? "text-red-500"
-                          : ""
-                        }
-                        >
-                        {new Date(price.updated_at).toLocaleString()}
-                        </span>
+                      {new Date(price.updated_at).toLocaleString()}
                     </td>
                   </tr>
                 ))}

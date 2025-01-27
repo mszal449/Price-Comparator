@@ -42,11 +42,13 @@ const ReportPage = () => {
     getInitialSearchOptions,
   );
   const [searchedProduct, setSearchedProduct] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [today, setToday] = useState<string>();
 
   useEffect(() => {
     setMounted(true);
-    setIsLoading(false);
+    const date = new Date();
+    setToday(date.toISOString().split('T')[0]);
   }, []);
 
   // Store searchOptions in localStorage on each update
@@ -142,8 +144,10 @@ const ReportPage = () => {
           setSearchOptions={setSearchOptions}
         />
       </form>
+
+      {/* Products */}
       {isLoading && mounted && <Spinner />}
-      {product && (
+      {product && today && (
         <div className="mt-5 flex flex-col items-center gap-2">
           <span className="text-2xl">Wyniki dla “{searchedProduct}”:</span>
           {mounted && !searchOptions.preciseName && (
@@ -157,7 +161,7 @@ const ReportPage = () => {
             {product.map((p) =>
               p.prices ? (
                 <div key={p.product_id} className="w-[80%]">
-                  <ProductPreview {...p} />
+                  <ProductPreview today={today} {...p}/>
                 </div>
               ) : null,
             )}

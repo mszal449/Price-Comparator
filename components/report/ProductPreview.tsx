@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { IProductPrices } from "types";
 
 interface ProductPreviewProps extends IProductPrices {
@@ -7,49 +7,43 @@ interface ProductPreviewProps extends IProductPrices {
 }
 
 const ProductPreview = ({ product_id, prices, today }: ProductPreviewProps) => {
+  const [showDiscountByIndex, setShowDiscountByIndex] = useState<{
+    [key: number]: boolean;
+  }>({});
+
   return (
     <div className="flex w-full flex-col gap-2 border border-gray-700 p-4">
       <div className="text-2xl">{product_id}</div>
       <div className="text-gray-400">
         {prices &&
-          prices.map((price) => {
-            return <div key={price.shop_id}>{price.shop_description}</div>;
-          })}
+          prices
+            .sort((a, b) => a.shop_id - b.shop_id)
+            .map((price) => {
+              return <div key={price.shop_id}>{price.shop_description}</div>;
+            })}
       </div>
       <div>
         {prices && (
           <table className="min-w-full divide-y divide-gray-700">
             <thead className="bg-gray-800">
               <tr>
-                <th
-                  scope="col"
-                  className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-300"
-                >
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-300">
                   Sklep
                 </th>
-                <th
-                  scope="col"
-                  className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-300"
-                >
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-300">
                   Cena po przewalutowaniu
                 </th>
-                <th
-                  scope="col"
-                  className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-300"
-                >
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-300">
                   Cena przed przewalutowaniem
                 </th>
-                <th
-                  scope="col"
-                  className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-300"
-                >
-                  Dostępność (w sztukach)
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-300">
+                  Stan magazynowy
                 </th>
-                <th
-                  scope="col"
-                  className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-300"
-                >
-                  Data dodania
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-300">
+                  Data aktualizacji
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-300">
+                  Cena po rabacie
                 </th>
               </tr>
             </thead>
@@ -81,6 +75,28 @@ const ProductPreview = ({ product_id, prices, today }: ProductPreviewProps) => {
                       >
                         {new Date(price.updated_at).toLocaleString()}
                       </span>
+                    </td>
+                    <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-300">
+                      {!showDiscountByIndex[index] ? (
+                        <button
+                          onClick={() =>
+                            setShowDiscountByIndex((prev) => ({
+                              ...prev,
+                              [index]: !prev[index],
+                            }))
+                          }
+                          className="rounded-md bg-purple-500 p-2 duration-150 ease-in hover:bg-purple-600"
+                        >
+                          Pokaż
+                        </button>
+                      ) : (
+                        <div className="p-2">
+                          {((price.price_in_pln / 0.57412347) * 0.38).toFixed(
+                            2,
+                          )}{" "}
+                          PLN
+                        </div>
+                      )}
                     </td>
                   </tr>
                 ))}

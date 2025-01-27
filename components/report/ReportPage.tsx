@@ -160,7 +160,7 @@ const ReportPage = () => {
           <div className="flex flex-col items-center gap-2">
             {product.map((p) =>
               p.prices ? (
-                <div key={p.product_id} className="w-[80%]">
+                <div key={p.product_id} className="w-[85%]">
                   <ProductPreview today={today} {...p} />
                 </div>
               ) : null,

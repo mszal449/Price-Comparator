@@ -48,7 +48,7 @@ const ReportPage = () => {
   useEffect(() => {
     setMounted(true);
     const date = new Date();
-    setToday(date.toISOString().split('T')[0]);
+    setToday(date.toISOString().split("T")[0]);
   }, []);
 
   // Store searchOptions in localStorage on each update
@@ -161,7 +161,7 @@ const ReportPage = () => {
             {product.map((p) =>
               p.prices ? (
                 <div key={p.product_id} className="w-[80%]">
-                  <ProductPreview today={today} {...p}/>
+                  <ProductPreview today={today} {...p} />
                 </div>
               ) : null,
             )}

@@ -1,15 +1,15 @@
 import { useState } from "react";
 import React from "react";
-import type { IRaportFilters } from "types";
+import type { IReportFilters } from "types";
 import { GoDash } from "react-icons/go";
 
-interface IRaportFiltersProps {
-  filters: IRaportFilters;
-  setFilters: (filters: IRaportFilters) => void;
+interface IReportFiltersProps {
+  filters: IReportFilters;
+  setFilters: (filters: IReportFilters) => void;
 }
 
-const RaportFilters = ({ setFilters }: IRaportFiltersProps) => {
-  const [localFilters, setLocalFilters] = useState<IRaportFilters>({
+const ReportFilters = ({ setFilters }: IReportFiltersProps) => {
+  const [localFilters, setLocalFilters] = useState<IReportFilters>({
     productId: "",
     minStock: 0,
     minPrice: null,
@@ -103,4 +103,4 @@ const RaportFilters = ({ setFilters }: IRaportFiltersProps) => {
   );
 };
 
-export default RaportFilters;
+export default ReportFilters;

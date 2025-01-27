@@ -1,4 +1,4 @@
-import RaportStatus from "components/home/RaportStatus";
+import ReportStatus from "components/home/ReportStatus";
 import React from "react";
 
 export default function Home() {
@@ -8,7 +8,7 @@ export default function Home() {
         <div className="pb-4 text-4xl">
           InkCheck - porównaj ceny w jednym miejscu.
         </div>
-        <RaportStatus />
+        <ReportStatus />
       </div>
     </div>
   );

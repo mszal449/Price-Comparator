@@ -8,7 +8,7 @@ export async function middleware(request: NextRequest) {
 
   const path = new URL(request.nextUrl).pathname;
 
-  const protected_routes = ["/admin", "/raport"];
+  const protected_routes = ["/admin", "/report"];
   const auth_routes = ["/auth/login", "/auth/create-account"];
   const admin_routes = ["/admin", "/admin/users"];
 

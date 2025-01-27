@@ -20,7 +20,7 @@ export interface IProductPricesResponse {
   products: IProductPrices[];
 }
 
-export interface IRaportFilters {
+export interface IReportFilters {
   productId?: string;
   minStock?: number;
   minPrice?: number | null;
@@ -41,17 +41,27 @@ export interface IUser {
   role: string;
 }
 
+export interface IShop {
+  id: string;
+  name: string;
+  url: string;
+}
+
 export interface FetchError extends Error {
   status?: number;
   response?: string;
 }
 
-export interface IRaport {
-  jarltech: boolean;
-  jarltech_count: number;
-  ingram_micro_24: boolean;
-  ingram_micro_24_count: number;
-  koncept_l: boolean;
-  koncept_l_count: number;
+export interface IShopReport {
+  shop_id: string;
+  price_count: number;
+  success: boolean;
   created_at: string;
+}
+
+export interface IReports {
+  reports: Array<{
+    shop: IShop;
+    report: IShopReport | null;
+  }>;
 }

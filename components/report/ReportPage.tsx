@@ -33,7 +33,7 @@ const getInitialSearchOptions = (): ISearchOptions => {
   return initialOptions;
 };
 
-const RaportPage = () => {
+const ReportPage = () => {
   const [product, setProduct] = useState<IProductPrices[] | null>(null);
   const [productId, setProductId] = useState("");
   const [error, setError] = useState<string | null>("");
@@ -177,4 +177,4 @@ const RaportPage = () => {
     </div>
   );
 };
-export default RaportPage;
+export default ReportPage;

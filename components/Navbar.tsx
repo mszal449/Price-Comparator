@@ -25,7 +25,7 @@ const Navbar = ({ initialUser }: NavbarProps) => {
             <Link className={`navbar-element`} href="/">
               Strona główna
             </Link>
-            <Link className={`navbar-element`} href="/raport">
+            <Link className={`navbar-element`} href="/report">
               Przeglądaj ceny
             </Link>
           </div>

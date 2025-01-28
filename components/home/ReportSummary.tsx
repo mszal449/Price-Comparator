@@ -42,7 +42,7 @@ const ReportSummary = ({ report }: { report: IReports }) => {
               <td
                 className={`p-3 text-start ${!item.report?.success ? "text-ted-500" : ""}`}
               >
-                {item.report?.created_at
+                {item.report?.generated_at
                   ? new Date(item.report.created_at).toLocaleString()
                   : "Brak danych"}
               </td>

@@ -56,6 +56,7 @@ export interface IShopReport {
   shop_id: string;
   price_count: number;
   success: boolean;
+  generated_at: string;
   created_at: string;
 }
 

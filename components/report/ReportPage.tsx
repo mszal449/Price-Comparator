@@ -69,8 +69,8 @@ const ReportPage = () => {
 
   // Fetch products
   const fetchProduct = useCallback(async () => {
-    if (!productId) {
-      setError("Musisz podać unikalny identyfikator produktu.");
+    if (!productId && !searchOptions.description) {
+      setError("Musisz podać unikalny identyfikator lub opis produktu.");
       return;
     }
 
@@ -80,12 +80,16 @@ const ReportPage = () => {
 
     try {
       const query = new URLSearchParams({
+        id: productId,
         preciseName: searchOptions.preciseName ? "true" : "false",
         onlyAvailable: searchOptions.onlyAvailable ? "true" : "false",
         page: searchOptions.page.toString(),
         pageSize: searchOptions.pageSize.toString(),
+        ...(searchOptions.description && {
+          description: searchOptions.description,
+        }),
       });
-      const url = `/api/products/${productId}?${query.toString()}`;
+      const url = `/api/products/?${query.toString()}`;
       const res = await fetch(url, { method: "GET" });
 
       if (res.status === 404) {
@@ -101,7 +105,7 @@ const ReportPage = () => {
       const data = await res.json();
       setSearchOptions((prev) => ({ ...prev, totalCount: data.totalCount }));
       setProduct(data.products || null);
-      setSearchedProduct(productId);
+      setSearchedProduct(productId || searchOptions.description || "");
     } catch (error) {
       console.error("Error fetching product prices", error);
       setError("Wystąpił błąd podczas pobierania danych.");
@@ -110,7 +114,7 @@ const ReportPage = () => {
     }
   }, [productId, searchOptions, setSearchOptions]);
 
-  // Update products on page change
+  // Handle page change
   useEffect(() => {
     if (productId) {
       fetchProduct();
@@ -127,7 +131,7 @@ const ReportPage = () => {
     <div className="flex flex-col items-center">
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col items-center gap-2"
+        className="flex flex-col items-center gap-1"
       >
         <span className="text-2xl">Wyszukaj produkt</span>
         <div>
@@ -141,6 +145,21 @@ const ReportPage = () => {
             onChange={(e) => setProductId(e.target.value)}
             disabled={isLoading}
           />
+          <input
+            className={`border border-x-0 border-gray-800 p-2 text-xl ${
+              isLoading ? "bg-gray-900 text-gray-400" : "bg-black text-white"
+            } ${error ? "border-red-500" : ""} `}
+            type="text"
+            placeholder="Opis produktu"
+            value={searchOptions.description || ""}
+            onChange={(e) =>
+              setSearchOptions((prev) => ({
+                ...prev,
+                description: e.target.value,
+              }))
+            }
+            disabled={isLoading}
+          />
           <button
             className={`m-2 ml-0 rounded-r-md border p-2 text-xl ${
               isLoading
@@ -152,11 +171,30 @@ const ReportPage = () => {
             Szukaj
           </button>
         </div>
+        <div></div>
         {error && <div className="text-red-500">{error}</div>}
-        <SearchOptionsPanel
-          searchOptions={searchOptions}
-          setSearchOptions={setSearchOptions}
-        />
+        <div className="flex gap-2">
+          <SearchOptionsPanel
+            searchOptions={searchOptions}
+            setSearchOptions={setSearchOptions}
+          />
+          <button
+            type="button"
+            onClick={() => {
+              setProductId("");
+              setSearchOptions((prev) => ({
+                ...prev,
+                description: "",
+                page: 1,
+              }));
+              setProduct(null);
+              setError(null);
+            }}
+            className="h-auto self-start rounded-md border border-gray-800 p-2 text-xl text-white duration-150 ease-in hover:bg-gray-800"
+          >
+            Wyczyść
+          </button>
+        </div>
       </form>
 
       {isLoading && <Spinner />}

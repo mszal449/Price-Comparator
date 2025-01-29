@@ -33,6 +33,8 @@ export interface ISearchOptions {
   page: number;
   pageSize: number;
   totalCount: number;
+
+  description?: string;
 }
 
 export interface IUser {

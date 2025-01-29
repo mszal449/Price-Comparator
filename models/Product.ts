@@ -4,7 +4,6 @@ import { PriceSchema, IPrice } from "./Price";
 export interface IProduct extends Document {
   id: string;
   name: string;
-  description: string;
   created_at: Date;
   prices: IPrice[];
 }
@@ -13,7 +12,6 @@ const ProductSchema: Schema<IProduct> = new Schema(
   {
     id: { type: String, required: true },
     name: { type: String, default: "" },
-    description: { type: String, default: "" },
     created_at: { type: Date, default: Date.now },
     prices: { type: [PriceSchema], default: [] },
   },

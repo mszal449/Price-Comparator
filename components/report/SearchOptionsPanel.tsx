@@ -61,22 +61,6 @@ const SearchOptionsPanel = ({
                 Dokładne wyszukiwanie identyfikatora
               </label>
             </div>
-            {/* <div className="flex items-baseline">
-              <input
-                type="checkbox"
-                id="onlyAvailable"
-                name="onlyAvailable"
-                checked={searchOptions.onlyAvailable}
-                onChange={updateSearchOptions}
-                className="cursor-pointer"
-              />
-              <label
-                className="ml-1 cursor-pointer select-none"
-                htmlFor="onlyAvailable"
-              >
-                Tylko dostępne
-              </label>
-            </div> */}
           </div>
         </div>
       )}

@@ -1,73 +1,84 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import ProductPreview from "./ProductPreview";
 import { IProductPrices, ISearchOptions } from "types";
 import SearchOptionsPanel from "./SearchOptionsPanel";
 import PaginationPanel from "./PaginationPanel";
 import Spinner from "../utils/Spinner";
 
-const getInitialSearchOptions = (): ISearchOptions => {
-  const initialOptions = {
+const useSearchOptions = (): [
+  ISearchOptions,
+  (
+    options: ISearchOptions | ((prev: ISearchOptions) => ISearchOptions),
+  ) => void,
+] => {
+  const getInitialSearchOptions = (): ISearchOptions => ({
     preciseName: false,
     onlyAvailable: false,
     page: 1,
     pageSize: 10,
     totalCount: 1,
-  };
+  });
 
-  if (typeof window !== "undefined") {
-    const storedOptions = localStorage.getItem("searchOptions");
-    if (storedOptions) {
-      const parsedOptions = JSON.parse(storedOptions);
-      const hasAllKeys = Object.keys(initialOptions).every(
-        (key) => key in parsedOptions,
-      );
-      if (hasAllKeys) {
-        return parsedOptions;
-      } else {
-        localStorage.setItem("searchOptions", JSON.stringify(initialOptions));
-        return initialOptions;
+  const [searchOptions, setSearchOptions] = useState<ISearchOptions>(() => {
+    if (typeof window !== "undefined") {
+      const storedOptions = localStorage.getItem("searchOptions");
+      if (storedOptions) {
+        const parsedOptions = JSON.parse(storedOptions);
+        const hasAllKeys = Object.keys(getInitialSearchOptions()).every(
+          (key) => key in parsedOptions,
+        );
+        if (hasAllKeys) return parsedOptions;
       }
     }
-  }
-  return initialOptions;
+    return getInitialSearchOptions();
+  });
+
+  const updateSearchOptions = (
+    newOptions: ISearchOptions | ((prev: ISearchOptions) => ISearchOptions),
+  ) => {
+    if (typeof newOptions === "function") {
+      setSearchOptions((prev) => {
+        const updatedOptions = newOptions(prev);
+        localStorage.setItem("searchOptions", JSON.stringify(updatedOptions));
+        return updatedOptions;
+      });
+    } else {
+      localStorage.setItem("searchOptions", JSON.stringify(newOptions));
+      setSearchOptions(newOptions);
+    }
+  };
+
+  return [searchOptions, updateSearchOptions];
 };
 
 const ReportPage = () => {
   const [product, setProduct] = useState<IProductPrices[] | null>(null);
   const [productId, setProductId] = useState("");
   const [error, setError] = useState<string | null>("");
-  const [mounted, setMounted] = useState(false);
-  const [searchOptions, setSearchOptions] = useState<ISearchOptions>(
-    getInitialSearchOptions,
-  );
+  const [searchOptions, setSearchOptions] = useSearchOptions();
   const [searchedProduct, setSearchedProduct] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [today, setToday] = useState<string>();
 
+  // Fetch date
   useEffect(() => {
-    setMounted(true);
     const date = new Date();
     setToday(date.toISOString().split("T")[0]);
   }, []);
 
-  // Store searchOptions in localStorage on each update
-  useEffect(() => {
-    localStorage.setItem("searchOptions", JSON.stringify(searchOptions));
-  }, [searchOptions]);
-
-  useEffect(() => {
-    updateProduct();
-  }, [searchOptions.page]);
-
-  const updateProduct = async () => {
+  // Fetch products
+  const fetchProduct = useCallback(async () => {
     if (!productId) {
       setError("Musisz podać unikalny identyfikator produktu.");
       return;
     }
+
+    setIsLoading(true);
+    setError(null);
+    setProduct(null);
+
     try {
-      setIsLoading(true);
-      setProduct(null);
       const query = new URLSearchParams({
         preciseName: searchOptions.preciseName ? "true" : "false",
         onlyAvailable: searchOptions.onlyAvailable ? "true" : "false",
@@ -75,19 +86,15 @@ const ReportPage = () => {
         pageSize: searchOptions.pageSize.toString(),
       });
       const url = `/api/products/${productId}?${query.toString()}`;
-      const res = await fetch(url, {
-        method: "GET",
-      });
+      const res = await fetch(url, { method: "GET" });
 
       if (res.status === 404) {
         setError("Nie znaleziono cen produktu o podanym identyfikatorze.");
-        setProduct(null);
         return;
       }
 
       if (!res.ok) {
         setError("Błąd komunikacji z serwerem.");
-        setProduct(null);
         return;
       }
 
@@ -95,25 +102,31 @@ const ReportPage = () => {
       setSearchOptions((prev) => ({ ...prev, totalCount: data.totalCount }));
       setProduct(data.products || null);
       setSearchedProduct(productId);
-      setError(null);
     } catch (error) {
       console.error("Error fetching product prices", error);
-      setError("Musisz podać unikalny identyfikator produktu.");
+      setError("Wystąpił błąd podczas pobierania danych.");
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [productId, searchOptions, setSearchOptions]);
 
-  const handle_submit = (e: React.FormEvent<HTMLFormElement>) => {
+  // Update products on page change
+  useEffect(() => {
+    if (productId) {
+      fetchProduct();
+    }
+  }, [searchOptions.page]);
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSearchOptions((prev) => ({ ...prev, page: 1 }));
-    updateProduct();
+    fetchProduct();
   };
 
   return (
     <div className="flex flex-col items-center">
       <form
-        onSubmit={handle_submit}
+        onSubmit={handleSubmit}
         className="flex flex-col items-center gap-2"
       >
         <span className="text-2xl">Wyszukaj produkt</span>
@@ -123,6 +136,7 @@ const ReportPage = () => {
               isLoading ? "bg-gray-900 text-gray-400" : "bg-black text-white"
             } ${error ? "border-red-500" : ""}`}
             type="text"
+            placeholder="Identyfikator"
             value={productId}
             onChange={(e) => setProductId(e.target.value)}
             disabled={isLoading}
@@ -145,16 +159,15 @@ const ReportPage = () => {
         />
       </form>
 
-      {/* Products */}
-      {isLoading && mounted && <Spinner />}
+      {isLoading && <Spinner />}
       {product && today && (
         <div className="mt-5 flex flex-col items-center gap-2">
           <span className="text-2xl">Wyniki dla “{searchedProduct}”:</span>
-          {mounted && !searchOptions.preciseName && (
+          {!searchOptions.preciseName && (
             <PaginationPanel
               searchOptions={searchOptions}
               setSearchOptions={setSearchOptions}
-              updateProduct={updateProduct}
+              updateProduct={fetchProduct}
             />
           )}
           <div className="flex flex-col items-center gap-2">
@@ -166,11 +179,11 @@ const ReportPage = () => {
               ) : null,
             )}
           </div>
-          {mounted && !searchOptions.preciseName && (
+          {!searchOptions.preciseName && (
             <PaginationPanel
+              updateProduct={fetchProduct}
               searchOptions={searchOptions}
               setSearchOptions={setSearchOptions}
-              updateProduct={updateProduct}
             />
           )}
         </div>
@@ -181,4 +194,5 @@ const ReportPage = () => {
     </div>
   );
 };
+
 export default ReportPage;

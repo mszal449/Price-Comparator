@@ -45,7 +45,7 @@ const ReportStatus = () => {
       {!isLoading && (
         <Link
           href="/report"
-          className="m-4 rounded-md bg-green-500 p-4 text-white duration-150 ease-in"
+          className="m-4 rounded-md bg-green-500 p-4 text-white duration-150 ease-in hover:bg-green-600"
         >
           Przeglądaj ceny
         </Link>
